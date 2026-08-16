@@ -1,0 +1,25 @@
+name: Build check
+
+# Catches a broken build before Vercel does, and fails loudly on a dependency
+# advisory so the project does not quietly drift into a vulnerable state —
+# that is a due-diligence item if the site is ever sold.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 13 * * 1'   # Mondays 13:00 UTC — weekly drift check
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high

@@ -1,0 +1,22 @@
+name: Notify search engines
+
+# Pings IndexNow whenever published content changes on main.
+# Deliberately scoped to content and route files so config-only commits don't spam it.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/**'
+      - 'app/**'
+  workflow_dispatch:
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Submit URLs to IndexNow
+        run: node scripts/indexnow.mjs
