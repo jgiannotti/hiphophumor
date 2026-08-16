@@ -19,7 +19,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install --no-audit --no-fund
+      # --include=dev is explicit on purpose: tailwind/postcss/typescript are
+      # devDependencies but are required to produce the build, and any environment
+      # with NODE_ENV=production omits them by default and fails the build.
+      # Do NOT set NODE_ENV=development here — that breaks the React 19 build
+      # with a null-dispatcher error. Install with dev deps, build in production.
+      - run: npm ci --include=dev --no-audit --no-fund
       - run: npm run build
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
