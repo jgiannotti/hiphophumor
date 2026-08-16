@@ -1,0 +1,62 @@
+name: Refresh meme pool
+
+# The free, hands-off content engine.
+#
+# Runs on GitHub's runners (NOT Vercel) so the pullpush.io fetch isn't blocked
+# by cloud-IP filtering. Pulls fresh trending memes daily, validates the
+# trending headline strip, commits any changed data/*.json back to main, and
+# Vercel auto-deploys on push. No dependency on anyone's laptop being on.
+#
+# pullpush can rate-limit or be down — the refresh script fails GRACEFULLY
+# (keeps the existing data, exits 0) so a bad upstream day never breaks the site
+# or this workflow.
+
+on:
+  schedule:
+    # 13:00 UTC daily (~9am ET / 6am PT). Cron uses UTC.
+    - cron: '0 13 * * *'
+  workflow_dispatch: {} # manual "Run workflow" button in the Actions tab
+
+# Allow the built-in token to push the refreshed JSON back to the repo.
+permissions:
+  contents: write
+
+# Don't pile up runs if one is slow.
+concurrency:
+  group: refresh-memes
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Refresh trending meme pool (pullpush.io)
+        run: node scripts/refresh-memes.mjs
+
+      - name: Validate trending headline strip
+        run: node scripts/refresh-trending.mjs
+
+      - name: Commit & push if data changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain data/)" ]; then
+            git add data/
+            git commit -m "chore: refresh meme pool [skip ci]"
+            git push
+            echo "Pushed refreshed data. Vercel will auto-deploy."
+          else
+            echo "No data changes — nothing to commit."
+          fi

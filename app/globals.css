@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ink-950 font-body text-ink-100 antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-volt text-ink-950;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-volt ring-offset-2 ring-offset-ink-950;
+  }
+}
+
+@layer components {
+  /* The extractable answer block. Kept high-contrast and above the fold. */
+  .quick-answer {
+    @apply relative rounded-2xl border border-volt/25 bg-volt/[0.06] p-6 sm:p-7;
+  }
+
+  .quick-answer p {
+    @apply m-0 text-lg leading-relaxed text-ink-100 sm:text-xl;
+  }
+
+  .prose-hhh {
+    @apply text-[1.0625rem] leading-[1.75] text-ink-300;
+  }
+
+  .prose-hhh > * + * {
+    @apply mt-5;
+  }
+
+  .prose-hhh h2 {
+    @apply mt-14 scroll-mt-24 font-display text-3xl uppercase leading-tight tracking-tight text-ink-100 sm:text-4xl;
+  }
+
+  .prose-hhh h3 {
+    @apply mt-10 scroll-mt-24 text-xl font-bold leading-snug text-ink-100 sm:text-2xl;
+  }
+
+  .prose-hhh h4 {
+    @apply mt-8 scroll-mt-24 text-lg font-semibold text-ink-100;
+  }
+
+  .prose-hhh p {
+    @apply text-ink-300;
+  }
+
+  .prose-hhh strong {
+    @apply font-semibold text-ink-100;
+  }
+
+  .prose-hhh em {
+    @apply italic;
+  }
+
+  .prose-hhh a {
+    @apply font-medium text-volt underline decoration-volt/35 underline-offset-[3px] transition-colors hover:decoration-volt;
+  }
+
+  .prose-hhh ul {
+    @apply list-disc space-y-2 pl-6 marker:text-volt;
+  }
+
+  .prose-hhh ol {
+    @apply list-decimal space-y-2 pl-6 marker:text-volt;
+  }
+
+  .prose-hhh li > p {
+    @apply my-0;
+  }
+
+  .prose-hhh blockquote {
+    @apply border-l-2 border-magenta pl-5 text-ink-300 italic;
+  }
+
+  .prose-hhh hr {
+    @apply my-12 border-ink-800;
+  }
+
+  .prose-hhh code {
+    @apply rounded bg-ink-850 px-1.5 py-0.5 text-[0.9em] text-volt;
+  }
+
+  .prose-hhh table {
+    @apply my-8 w-full border-collapse overflow-hidden rounded-xl text-left text-sm;
+  }
+
+  .prose-hhh thead {
+    @apply bg-ink-850;
+  }
+
+  .prose-hhh th {
+    @apply border border-ink-800 px-4 py-3 font-semibold text-ink-100;
+  }
+
+  .prose-hhh td {
+    @apply border border-ink-800 px-4 py-3 align-top text-ink-300;
+  }
+
+  .prose-hhh img {
+    @apply rounded-xl;
+  }
+}
+
+@layer utilities {
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .grain {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(204, 255, 0, 0.08) 1px,
+      transparent 0
+    );
+    background-size: 28px 28px;
+  }
+}
