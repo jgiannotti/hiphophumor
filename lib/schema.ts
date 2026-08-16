@@ -12,6 +12,12 @@ export function organizationSchema() {
     name: SITE.name,
     url: SITE.url,
     description: SITE.description,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE.url}/icon.png`,
+      width: 512,
+      height: 512,
+    },
     ...(sameAs.length ? { sameAs } : {}),
   }
 }
@@ -83,6 +89,8 @@ function articleSchema(article: Article) {
     name: article.title,
     description: article.description,
     abstract: article.quickAnswer,
+    // Google's Article spec expects an image; the per-article OG route renders one.
+    image: [`${SITE.url}/${article.slug}/opengraph-image`],
     articleSection: PILLARS[article.pillar].name,
     wordCount: article.wordCount,
     inLanguage: 'en-US',

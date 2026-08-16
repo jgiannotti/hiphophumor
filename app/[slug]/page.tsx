@@ -23,7 +23,9 @@ export async function generateMetadata({
 
   const url = `${SITE.url}/${article.slug}`
   return {
-    title: article.title,
+    // `absolute` skips the site-name template — article titles already run long and
+    // the differentiating tail is what gets truncated in SERPs.
+    title: { absolute: article.title },
     description: article.description,
     keywords: [article.targetQuery, ...article.alsoAnswers],
     alternates: { canonical: url },
@@ -132,7 +134,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                   <a
                     href={s.url}
                     target="_blank"
-                    rel="noopener nofollow"
+                    rel="noopener"
                     className="text-ink-300 underline decoration-ink-600 underline-offset-2 hover:text-volt"
                   >
                     {s.title}

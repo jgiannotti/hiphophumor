@@ -59,11 +59,12 @@ function renderMarkdown(md: string): string {
     return `<h${level} id="${id}">${text}</h${level}>`
   }
 
-  // Mark external links safely; keep internal links clean for crawlers.
+  // External links open in a new tab but are NOT nofollowed: these are editorial
+  // citations, and vouching for our sources is the whole point of the sourcing policy.
   renderer.link = (href, title, text) => {
     const t = title ? ` title="${title}"` : ''
     if (href && /^https?:\/\//i.test(href)) {
-      return `<a href="${href}"${t} target="_blank" rel="noopener nofollow">${text}</a>`
+      return `<a href="${href}"${t} target="_blank" rel="noopener">${text}</a>`
     }
     return `<a href="${href}"${t}>${text}</a>`
   }

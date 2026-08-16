@@ -33,6 +33,16 @@ export async function generateMetadata({
       url: `${SITE.url}/topics/${p.slug}`,
       title: `${p.name} — Explained | ${SITE.name}`,
       description: p.blurb,
+      siteName: SITE.name,
+      // Without this the hubs inherit the root layout's card and advertise a
+      // summary_large_image with no image behind it.
+      images: [{ url: `${SITE.url}/opengraph-image`, width: 1200, height: 630, alt: p.name }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${p.name} — Explained`,
+      description: p.blurb,
+      images: [`${SITE.url}/opengraph-image`],
     },
   }
 }
